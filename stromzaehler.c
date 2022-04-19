@@ -38,10 +38,11 @@
 #include <wiringPi.h>
 
 
+
 // What GPIO input are we using?
 //	This is a wiringPi pin number
 
-#define	BUTTON_PIN	0
+#define	BUTTON_PIN	3
 
 // globalCounter:
 //	Global variable to count interrupts
@@ -92,9 +93,9 @@ int main (void)
     while (myCounter == globalCounter)
       delay (100) ;
 
-    //printf (" Done. counter: %5d\n", globalCounter) ;
+    printf (" Done. counter: %5d\n", globalCounter) ;
     //datei = fopen ("/var/strom/stromcounter", "w");
-    datei = fopen ("/home/pi/Stromzaehler/Zaehlerstand", "w");
+    datei = fopen ("/home/pi/rpi_stromzaehler/Zaehlerstand", "w");
     fprintf (datei, "%d\n", globalCounter);
     fclose (datei);
     myCounter = globalCounter ;
@@ -102,3 +103,6 @@ int main (void)
 
   return 0 ;
 }
+
+
+
