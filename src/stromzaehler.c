@@ -62,6 +62,15 @@ void myInterrupt (void)
 }
 
 
+int read_from_file(){
+  FILE *file = fopen ("/home/pi/rpi_stromzaehler/Zaehlerstand", "r");
+  int i = 0;
+  fscanf(file, "%d", &i);
+  
+  printf("Current value: %d\n", i);
+  return i;
+}
+
 /*
  *********************************************************************************
  * main
@@ -72,6 +81,9 @@ int main (void)
 {
   FILE *datei;
   int myCounter = 0 ;
+  
+  myCounter = read_from_file();
+  globalCounter = myCounter;
 
   if (wiringPiSetup () < 0)
   {
