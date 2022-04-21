@@ -36,19 +36,24 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <wiringPi.h>
+#include <time.h>
 
-
+#include "csv.h"
 
 // What GPIO input are we using?
 //	This is a wiringPi pin number
 
 #define	BUTTON_PIN	3
 
+#define CSV_FILE  "zahlerstand.csv"
+#define LINE_SIZE 300
+
 // globalCounter:
 //	Global variable to count interrupts
 //	Should be declared volatile to make sure the compiler doesn't cache it.
 
-static volatile int globalCounter = 0 ;
+static volatile int global_counter = 0 ;
+char *line;
 
 
 /*
@@ -58,7 +63,11 @@ static volatile int globalCounter = 0 ;
 
 void myInterrupt (void)
 {
-  ++globalCounter ;
+  ++global_counter;
+  
+  sprintf(line, "%d;%d", (int)time(NULL), global_counter);
+  csv_append_line(CSV_FILE, line);
+  memset(line, 0, LINE_SIZE);
 }
 
 
@@ -83,7 +92,9 @@ int main (void)
   int myCounter = 0 ;
   
   myCounter = read_from_file();
-  globalCounter = myCounter;
+  global_counter = myCounter;
+  
+  line = (char *)malloc(LINE_SIZE);
 
   if (wiringPiSetup () < 0)
   {
@@ -102,16 +113,18 @@ int main (void)
   {
     //printf ("Waiting ... ") ; fflush (stdout) ;
 
-    while (myCounter == globalCounter)
+    while (myCounter == global_counter)
       delay (100) ;
 
-    printf (" Done. counter: %5d\n", globalCounter) ;
+    printf (" Done. counter: %5d\n", global_counter) ;
     //datei = fopen ("/var/strom/stromcounter", "w");
     datei = fopen ("/home/pi/rpi_stromzaehler/Zaehlerstand", "w");
-    fprintf (datei, "%d\n", globalCounter);
+    fprintf (datei, "%d\n", global_counter);
     fclose (datei);
-    myCounter = globalCounter ;
+    myCounter = global_counter ;
   }
+  
+  free(line);
 
   return 0 ;
 }

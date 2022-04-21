@@ -2,12 +2,13 @@
 SRC_DIR := src
 OBJ_DIR := obj
 BIN_DIR := bin
+INC_DIR := include
 
 EXE := $(BIN_DIR)/stromzaehler
 SRC := $(wildcard $(SRC_DIR)/*.c)
 OBJ := $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
-CPPFLAGS := -Iinclude -MMD -MP
+CPPFLAGS := -I$(INC_DIR) -MMD -MP
 CFLAGS   := -g -Wall
 LDFLAGS  := -Llib
 LDLIBS   := -lwiringPi
