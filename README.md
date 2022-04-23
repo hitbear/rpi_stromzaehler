@@ -3,7 +3,7 @@ Raspberry-based Measurement.
 
 ## Required Hardware
 
-Raspberry Pi
+Raspberry Pi (with UTC time settings)
 
 Eltako DSZ15D-3x80A Drehstromzähler
 

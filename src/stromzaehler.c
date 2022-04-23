@@ -36,14 +36,14 @@
 #include <errno.h>
 #include <stdlib.h>
 #include <wiringPi.h>
-#include <time.h>
+#include <sys/time.h>
 
 #include "csv.h"
 
 // What GPIO input are we using?
 //	This is a wiringPi pin number
 
-#define	BUTTON_PIN	3
+#define	BUTTON_PIN	9
 
 #define CSV_FILE  "zahlerstand.csv"
 #define LINE_SIZE 300
@@ -56,6 +56,14 @@ static volatile int global_counter = 0 ;
 char *line;
 
 
+long long current_timestamp() {
+    struct timeval te; 
+    gettimeofday(&te, NULL); // get current time
+    long long milliseconds = te.tv_sec*1000LL + te.tv_usec/1000; // calculate milliseconds
+    // printf("milliseconds: %lld\n", milliseconds);
+    return milliseconds;
+}
+
 /*
  * myInterrupt:
  *********************************************************************************
@@ -65,7 +73,7 @@ void myInterrupt (void)
 {
   ++global_counter;
   
-  sprintf(line, "%d;%d", (int)time(NULL), global_counter);
+  sprintf(line, "%lld;%d", current_timestamp(), global_counter);
   csv_append_line(CSV_FILE, line);
   memset(line, 0, LINE_SIZE);
 }
