@@ -91,7 +91,8 @@ void myInterrupt (void)
   char *filename = CSV_FILE_DAY;
   
   int hour = get_hour_of_day();
-  if ((hour < SWITCH_HOUR_DAY) || (SWITCH_HOUR_NIGHT < hour)){
+  //printf("hour %d\n", hour);
+  if ((hour < SWITCH_HOUR_DAY) || (SWITCH_HOUR_NIGHT <= hour)){
     filename = CSV_FILE_NIGHT;
     ++global_counter_night;
     sprintf(line, "%lld;%d", current_timestamp(), global_counter_night);
